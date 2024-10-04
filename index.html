@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OS Scheduler Pro X | Next-Gen Simulator</title>
+    
+    <!-- External CSS Libraries -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    
+    <!-- External JS Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.14/lottie.min.js"></script>
+
+    <style>
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .neo-gradient {
+            background: linear-gradient(-45deg, #00ff87, #60efff, #0061ff, #60efff);
+            background-size: 400% 400%;
+            animation: gradientFlow 15s ease infinite;
+        }
+
+        .neo-blur {
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .glow {
+            box-shadow: 0 0 15px rgba(0, 255, 135, 0.5);
+        }
+
+        .process-card {
+            transition: all 0.3s ease;
+            transform-style: preserve-3d;
+        }
+
+        .process-card:hover {
+            transform: translateY(-5px) rotateX(10deg);
+        }
+
+        @media (max-width: 768px) {
+            .hero-content {
+                padding: 2rem 1rem;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .cyber-button {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cyber-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: all 0.5s ease;
+        }
+
+        .cyber-button:hover::before {
+            left: 100%;
+        }
+
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .flex {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 20px 0;
+        }
+        
+        img.floating {
+            width: 100px; /* Adjust width */
+            height: auto; /* Maintain aspect ratio */
+            transition: transform 0.3s ease-in-out;
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        img.floating:hover {
+            transform: scale(1.1); /* Add a hover effect */
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0);
+            }
+        }
+        
+        /* Make it responsive */
+        @media (max-width: 768px) {
+            img.floating {
+                width: 80px; /* Smaller images on smaller screens */
+            }
+        }
+        
+        @media (max-width: 480px) {
+            img.floating {
+                width: 60px; /* Even smaller images for very small screens */
+            }
+        }
+        
+    </style>
+</head>
+<body class="bg-gray-900 text-white overflow-x-hidden">
+    <!-- Hero Section -->
+    <section class="neo-gradient min-h-screen relative overflow-hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <nav class="relative z-20 container mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div class="text-3xl font-bold tracking-wider">OS Scheduler Pro X</div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="#features" class="hover:text-green-400 transition-all">Features</a>
+                    <a href="#simulator" class="hover:text-green-400 transition-all">Simulator</a>
+                    <a href="#visualization" class="hover:text-green-400 transition-all">Analytics</a>
+                    <a href="#api" class="hover:text-green-400 transition-all">API</a>
+                </div>
+                <button class="md:hidden cyber-button bg-blue-600 px-4 py-2 rounded-lg">Menu</button>
+            </div>
+        </nav>
+
+        <div class="container mx-auto px-4 relative z-10 hero-content py-20">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-10 md:mb-0">
+                    <h1 class="text-5xl md:text-7xl font-bold mb-6 animate__animated animate__fadeInLeft">
+                        Quantum OS Scheduling
+                        <span class="block text-green-400">Redefined</span>
+                    </h1>
+                    <p class="text-xl mb-8 animate__animated animate__fadeInLeft animate__delay-1s">
+                        Experience the future of process management with real-time AI-powered scheduling and immersive 3D visualization.
+                    </p>
+                    <div class="flex space-x-4 animate__animated animate__fadeInUp animate__delay-2s">
+                        <button class="cyber-button bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-lg text-lg transition transform hover:scale-105 glow">
+                            Launch Simulator
+                        </button>
+                        <button class="cyber-button neo-blur px-8 py-4 rounded-lg text-lg transition transform hover:scale-105">
+                            Watch Demo
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 neo-blur rounded-xl p-6 floating">
+                    <div id="hero3D" class="w-full h-96 relative">
+                        <!-- 3D animation will be rendered here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Tech Icons -->
+        <div class="absolute bottom-10 left-0 right-0 overflow-hidden">
+            <div class="flex justify-around animate__animated animate__fadeInUp animate__delay-3s">
+                <img src="python-logo-4k-i6-3840x2160.jpg" alt="Python" class="floating" style="animation-delay: 0s">
+                <img src="logo-og.png" alt="React" class="floating" style="animation-delay: 0.5s">
+                <img src="3909225.jpg" alt="Node.js" class="floating" style="animation-delay: 1s">
+                <img src="OIP (13).jpg" alt="Docker" class="floating" style="animation-delay: 1.5s">
+                <img src="6129711.png" alt="Kubernetes" class="floating" style="animation-delay: 2s">
+            </div>
+        </div>
+    </section>
+
+    <!-- Simulator Section -->
+    <section id="simulator" class="py-20 bg-gray-800">
+        <div class="container mx-auto px-4">
+            <h2 class="text-4xl font-bold mb-16 text-center">Quantum Simulator Interface</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Advanced Controls -->
+                <div class="neo-blur rounded-xl p-6">
+                    <h3 class="text-2xl font-semibold mb-6">Quantum Scheduling Matrix</h3>
+                    <div class="mb-6">
+                        <label class="block mb-2">Algorithm Selection</label>
+                        <select id="algorithmSelect" class="w-full bg-gray-700 p-4 rounded-lg mb-4 focus:ring-2 focus:ring-green-400 outline-none">
+                            <option value="quantum">Quantum Fair-Share</option>
+                            <option value="ai">AI-Optimized Scheduling</option>
+                            <option value="predictive">Predictive Burst Estimation</option>
+                            <option value="realtime">Real-Time Priority Boost</option>
+                        </select>
+                    </div>
+                    <div id="quantum-controls" class="space-y-4">
+                        <div>
+                            <label class="block mb-2">Quantum Slice (ns)</label>
+                            <input type="range" min="100" max="5000" step="100" value="1000" 
+                                   class="w-full" id="quantumSlider">
+                            <div class="flex justify-between text-sm mt-1">
+                                <span>100ns</span>
+                                <span id="quantumValue">1000ns</span>
+                                <span>5000ns</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block mb-2">Core Utilization Target</label>
+                            <input type="range" min="0" max="100" step="5" value="75" 
+                                   class="w-full" id="utilizationSlider">
+                            <div class="flex justify-between text-sm mt-1">
+                                <span>0%</span>
+                                <span id="utilizationValue">75%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="startSimulation" class="w-full cyber-button bg-green-600 hover:bg-green-700 py-4 rounded-lg transition mt-6">
+                        Initialize Quantum Simulation
+                    </button>
+                </div>
+
+                <!-- Process Queue Visualizer -->
+                <div class="neo-blur rounded-xl p-6">
+                    <h3 class="text-2xl font-semibold mb-6">Quantum Process Matrix</h3>
+                    <div id="processQueue" class="h-96 overflow-y-auto custom-scrollbar space-y-4">
+                        <!-- Dynamic process cards will be added here -->
+                    </div>
+                    <div class="flex space-x-4 mt-6">
+                        <button id="addProcess" class="flex-1 cyber-button bg-blue-600 hover:bg-blue-700 py-4 rounded-lg transition">
+                            Spawn Process
+                        </button>
+                        <button id="optimizeQueue" class="flex-1 cyber-button bg-purple-600 hover:bg-purple-700 py-4 rounded-lg transition">
+                            AI Optimize
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-Time Analytics -->
+            <div class="mt-16 neo-blur rounded-xl p-6">
+                <h3 class="text-2xl font-semibold mb-6">Quantum Analytics Hub</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="text-xl mb-4">CPU Quantum Distribution</h4>
+                        <canvas id="cpuChart" height="200"></canvas>
+                    </div>
+                    <div>
+                        <h4 class="text-xl mb-4">Memory Quantum Allocation</h4>
+                        <div id="memoryVisualization" class="h-48 bg-gray-700 rounded-lg relative overflow-hidden">
+                            <!-- Dynamic memory blocks will be added here -->
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-xl mb-4">Quantum Efficiency Metrics</h4>
+                        <canvas id="efficiencyChart" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+
+    <script>
+        // Initialize GSAP
+        gsap.registerPlugin(ScrollTrigger);
+
+        function initThreeScene() {
+            const container = document.getElementById('hero3D');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true });
+            
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            // Create a complex geometric shape representing a quantum processor
+            const geometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
+            const material = new THREE.MeshBasicMaterial({ 
+                color: 0x00ff87,
+                wireframe: true
+            });
+            const quantumProcessor = new THREE.Mesh(geometry, material);
+            scene.add(quantumProcessor);
+
+            camera.position.z = 30;
+
+            // Particle system for background
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCnt = 5000;
+            const posArray = new Float32Array(particlesCnt * 3);
+
+            for(let i = 0; i < particlesCnt * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 100;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.005,
+                color: 0x00ff87
+            });
+            const particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particlesMesh);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                quantumProcessor.rotation.x += 0.01;
+                quantumProcessor.rotation.y += 0.01;
+                particlesMesh.rotation.y += 0.001;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        // Process Management System
+        class QuantumProcess {
+            constructor(id) {
+                this.id = id;
+                this.priority = Math.floor(Math.random() * 10) + 1;
+                this.burstTime = Math.floor(Math.random() * 10000) + 1000;
+                this.quantumState = Math.random();
+                this.remainingTime = this.burstTime;
+            }
+        }
+
+        class QuantumScheduler {
+            constructor() {
+                this.processes = [];
+                this.currentAlgorithm = 'quantum';
+                this.quantumSlice = 1000;
+                this.utilizationTarget = 75;
+                this.isRunning = false;
+                this.metrics = {
+                    cpuUsage: [],
+                    memoryUsage: [],
+                    efficiency: []
+                };
+            }
+
+            addProcess() {
+                const id = this.processes.length + 1;
+                const process = new QuantumProcess(id);
+                this.processes.push(process);
+                this.updateProcessQueue();
+                this.updateMetrics();
+            }
+
+            updateProcessQueue() {
+                const queueElement = document.getElementById('processQueue');
+                queueElement.innerHTML = '';
+                
+                this.processes.forEach(p => {
+                    const card = document.createElement('div');
+                    card.className = 'process-card neo-blur p-4 rounded-lg';
+                    
+                    const progressPercentage = ((p.burstTime - p.remainingTime) / p.burstTime) * 100;
+                    const stateColor = p.quantumState > 0.5 ? 'bg-green-500' : 'bg-blue-500';
+                    
+                    card.innerHTML = `
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-lg font-semibold">Process Q${p.id}</span>
+                            <span class="text-sm ${stateColor} px-2 py-1 rounded">Priority ${p.priority}</span>
+                        </div>
+                        <div class="space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span>Quantum State: ${p.quantumState.toFixed(3)}</span>
+                                <span>Remaining: ${(p.remainingTime / 1000).toFixed(2)}s</span>
+                            </div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full">
+                                <div class="${stateColor} h-full rounded-full transition-all duration-500"
+                                     style="width: ${progressPercentage}%"></div>
+                            </div>
+                        </div>
+                    `;
+                    queueElement.appendChild(card);
+                });
+            }
+
+            updateMetrics() {
+                // Update CPU usage chart
+                if (cpuChart) {
+                    cpuChart.data.datasets[0].data.push(Math.random() * 100);
+                    if (cpuChart.data.datasets[0].data.length > 10) {
+                        cpuChart.data.datasets[0].data.shift();
+                    }
+                    cpuChart.update();
+                }
+
+                // Update efficiency chart
+                if (efficiencyChart) {
+                    const newData = {
+                        throughput: Math.random() * 100,
+                        latency: Math.random() * 100,
+                        quantum: Math.random() * 100
+                    };
+                    efficiencyChart.data.datasets.forEach((dataset, i) => {
+                        dataset.data.push(Object.values(newData)[i]);
+                        if (dataset.data.length > 10) {
+                            dataset.data.shift();
+                        }
+                    });
+                    efficiencyChart.update();
+                }
+
+                // Update memory visualization
+                this.updateMemoryVisualization();
+            }
+
+            updateMemoryVisualization() {
+                const memViz = document.getElementById('memoryVisualization');
+                memViz.innerHTML = '';
+                
+                const blocks = 20;
+                for (let i = 0; i < blocks; i++) {
+                    const block = document.createElement('div');
+                    block.className = 'absolute bottom-0 transition-all duration-500';
+                    block.style.width = `${100 / blocks}%`;
+                    block.style.height = `${Math.random() * 100}%`;
+                    block.style.left = `${i * (100 / blocks)}%`;
+                    
+                    const hue = Math.floor(Math.random() * 360);
+                    block.style.backgroundColor = `hsla(${hue}, 70%, 60%, 0.6)`;
+                    block.style.backdropFilter = 'blur(5px)';
+                    
+                    memViz.appendChild(block);
+                }
+            }
+
+            start() {
+                if (this.isRunning) return;
+                this.isRunning = true;
+                this.runSimulation();
+            }
+
+            runSimulation() {
+                if (!this.isRunning) return;
+                
+                this.processes.forEach(p => {
+                    if (p.remainingTime > 0) {
+                        const quantum = Math.min(this.quantumSlice, p.remainingTime);
+                        p.remainingTime -= quantum;
+                        p.quantumState = Math.random(); // Simulate quantum state change
+                    }
+                });
+
+                this.updateProcessQueue();
+                this.updateMetrics();
+                
+                setTimeout(() => this.runSimulation(), 1000);
+            }
+        }
+
+        // Initialize Charts
+        let cpuChart, efficiencyChart;
+
+        function initCharts() {
+            const cpuCtx = document.getElementById('cpuChart').getContext('2d');
+            cpuChart = new Chart(cpuCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 10}, (_, i) => i),
+                    datasets: [{
+                        label: 'CPU Quantum Usage',
+                        data: Array.from({length: 10}, () => Math.random() * 100),
+                        borderColor: 'rgb(0, 255, 135)',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(0, 255, 135, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    animation: {
+                        duration: 500
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+
+            const efficiencyCtx = document.getElementById('efficiencyChart').getContext('2d');
+            efficiencyChart = new Chart(efficiencyCtx, {
+                type: 'line',
+                data: {
+                    labels: Array.from({length: 10}, (_, i) => i),
+                    datasets: [
+                        {
+                            label: 'Throughput',
+                            data: Array.from({length: 10}, () => Math.random() * 100),
+                            borderColor: 'rgb(0, 255, 135)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Latency',
+                            data: Array.from({length: 10}, () => Math.random() * 100),
+                            borderColor: 'rgb(96, 239, 255)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Quantum Coherence',
+                            data: Array.from({length: 10}, () => Math.random() * 100),
+                            borderColor: 'rgb(0, 97, 255)',
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize everything when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initThreeScene();
+            initCharts();
+
+            const scheduler = new QuantumScheduler();
+
+            // Event Listeners
+            document.getElementById('addProcess').addEventListener('click', () => scheduler.addProcess());
+            document.getElementById('startSimulation').addEventListener('click', () => scheduler.start());
+            
+            const quantumSlider = document.getElementById('quantumSlider');
+            const quantumValue = document.getElementById('quantumValue');
+            quantumSlider.addEventListener('input', (e) => {
+                quantumValue.textContent = `${e.target.value}ns`;
+                scheduler.quantumSlice = parseInt(e.target.value);
+            });
+
+            const utilizationSlider = document.getElementById('utilizationSlider');
+            const utilizationValue = document.getElementById('utilizationValue');
+            utilizationSlider.addEventListener('input', (e) => {
+                utilizationValue.textContent = `${e.target.value}%`;
+                scheduler.utilizationTarget = parseInt(e.target.value);
+            });
+
+            // Add some initial processes
+            for (let i = 0; i < 5; i++) {
+                scheduler.addProcess();
+            }
+
+            // Initialize animations
+            gsap.from('.hero-content', {
+                y: 100,
+                opacity: 0,
+                duration: 1,
+                ease: 'power3.out'
+            });
+
+            gsap.to('.floating', {
+                y: -20,
+                duration: 2,
+                repeat: -1,
+                yoyo: true,
+                ease: 'power1.inOut'
+            });
+
+            // Scroll animations
+            gsap.from('#features .neo-blur', {
+                scrollTrigger: {
+                    trigger: '#features',
+                    start: 'top center',
+                    toggleActions: 'play none none reverse'
+                },
+                y: 100,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: 'power3.out'
+            });
+        });
+    </script>
+</body>
+</html>
